@@ -1,8 +1,7 @@
 <p align="center">
-  <img src="https://kustos.wiki/assets/logo/kustos-mark.svg" width="96" alt="Kustos">
+  <img src="assets/kustos-wordmark.svg" width="340" alt="Kustos">
 </p>
 
-<h1 align="center">Kustos</h1>
 <p align="center"><b>Plex serves it. Kustos looks after it.</b></p>
 <p align="center">
   <a href="https://kustos.wiki">Website</a> ·

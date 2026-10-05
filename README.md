@@ -42,6 +42,21 @@ if you don't already have them.
 
 30 days free, no card. Then $5.99 a month or $60 a year, plus tax.
 
+## Coming from another tool?
+
+Each page answers one question, and says where Kustos does **not** help:
+
+- [Kometa, and YAML that builds nothing without erroring](https://kustos.wiki/wiki/coming-from-kometa)
+- [A cleanup that deleted a series someone was half-way through](https://kustos.wiki/wiki/deleting-a-show-someone-was-half-way-through)
+- [Title cards without making ten thousand by hand](https://kustos.wiki/wiki/making-plex-title-cards-automatically)
+- [Feeding a 4K Sonarr or Radarr alongside your main one](https://kustos.wiki/wiki/running-a-4k-sonarr-or-radarr-alongside-your-main-one)
+- [Trakt sync for everyone in the house, not just you](https://kustos.wiki/wiki/trakt-sync-for-everyone-in-the-house)
+
+Kustos did not invent any of this. Kometa, Maintainerr, TitleCardMaker and the
+rest worked out what a Plex library actually needs. Kustos puts those ideas in
+one place, with a UI instead of a config file, and makes them aware of each
+other.
+
 ## Help
 
 - **Discord** — [discord.gg/awsNGHKTXD](https://discord.gg/awsNGHKTXD), the fastest way to get help

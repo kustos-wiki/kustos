@@ -10,6 +10,13 @@
   <a href="https://discord.gg/awsNGHKTXD">Discord</a>
 </p>
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=1m2BPqSbeyE">
+    <img src="https://i.ytimg.com/vi/1m2BPqSbeyE/hqdefault.jpg" width="480" alt="Watch: the easiest Plex poster maker, no YAML required — 45 seconds">
+  </a>
+</p>
+<p align="center"><sub><a href="https://www.youtube.com/watch?v=1m2BPqSbeyE">45 seconds of it working</a></sub></p>
+
 Kustos manages the parts of a Plex library that Plex and the *arrs leave to you — for everyone in the house:
 
 - **Collections** built and kept up to date by rules

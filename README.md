@@ -38,6 +38,22 @@ It installs as a Windows service beside your Plex server, and can install and
 configure Sonarr, Radarr, Prowlarr, qBittorrent, Tautulli and Overseerr for you
 if you don't already have them.
 
+## Docker
+
+For servers already running in containers:
+
+```
+docker pull ghcr.io/kustos-wiki/kustos:latest
+```
+
+One volume (`/config`) holds the database and everything Kustos has learned.
+The [install guide](https://kustos.wiki/help) has the compose file.
+
+**If your media is on a NAS, install Sonarr and Radarr yourself** and point
+Kustos at them. It cannot guess which share your library lives on, so a
+container it launches for you would come up with an empty root folder rather
+than an error.
+
 ## Price
 
 30 days free, no card. Then $5.99 a month or $60 a year, plus tax.

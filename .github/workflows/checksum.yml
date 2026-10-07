@@ -1,0 +1,76 @@
+# Checks that kustos.wiki/download quotes the checksum of the installer the
+# download button actually serves.
+#
+# The page reads the published release when the site is built, so it is right
+# as of the last site deploy. A release published or re-uploaded without a site
+# deploy after it changes what the button serves and not what the page says.
+# Nothing fails, and a careful user sees a mismatch that reads as a tampered
+# installer. This run failing is how that gets noticed.
+#
+# It compares the DIGEST, not the version: a file re-uploaded under the same tag
+# changes the hash and not the number. It fails closed: if either side cannot be
+# read, that is a failure, never a pass.
+
+name: Download page checksum
+
+on:
+  release:
+    types: [published, edited]
+  schedule:
+    - cron: '17 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Compare the page with the latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # The site deploys after the release, so a run started by a release
+          # gives the deploy time to land before calling it stale.
+          WAIT_MINUTES: ${{ github.event_name == 'release' && '30' || '0' }}
+        run: |
+          set -euo pipefail
+
+          release=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest")
+          tag=$(jq -r '.tag_name' <<<"$release" | tr -d '\r')
+          mapfile -t digests < <(jq -r '.assets[] | select(.name | endswith(".exe")) | .digest' <<<"$release" | tr -d '\r')
+          if [ "${#digests[@]}" -ne 1 ]; then
+            echo "::error::$tag has ${#digests[@]} .exe assets; expected exactly one"
+            exit 1
+          fi
+          want=${digests[0]#sha256:}
+          if ! [[ "$want" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::$tag's installer carries no sha256 digest (got '${digests[0]}')"
+            exit 1
+          fi
+          echo "release $tag  sha256 $want"
+
+          deadline=$(( $(date +%s) + WAIT_MINUTES * 60 ))
+          while :; do
+            if page=$(curl -fsSL --max-time 30 https://kustos.wiki/download); then
+              found=$(grep -oE '[0-9a-f]{64}' <<<"$page" | sort -u || true)
+              if [ "$found" = "$want" ]; then
+                echo "kustos.wiki/download quotes the same digest"
+                exit 0
+              fi
+              if [ -z "$found" ]; then
+                msg="kustos.wiki/download quotes no sha256 at all. Redeploy the site (scripts/deploy-site.ps1) so it reads the release again"
+              else
+                msg="kustos.wiki/download quotes $(tr '\n' ' ' <<<"$found")but $tag serves $want. Redeploy the site (scripts/deploy-site.ps1) so it reads the release again"
+              fi
+            else
+              msg="kustos.wiki/download could not be read, so whether it matches is unknown"
+            fi
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "::error::$msg."
+              exit 1
+            fi
+            echo "$msg; retrying in 2 minutes"
+            sleep 120
+          done
